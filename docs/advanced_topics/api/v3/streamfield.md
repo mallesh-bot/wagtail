@@ -50,6 +50,8 @@ StreamField values are submitted as part of a page or snippet create or update, 
 -   An **unknown block type** in the submitted list returns `422`.
 -   Values are validated by the block's real `clean()` method and the form widget, and chooser IDs are validated, so the same validation applies as in the editor.
 
+Most blocks need no extra code to be writable: `StreamBlock`, `ListBlock`, `StructBlock`, and field-based blocks such as `CharBlock` and chooser blocks are handled automatically, accepting the same shape as their default API representation. Writes don't use a custom `get_api_representation`, so a block that overrides it still accepts the default shape on input. A block that doesn't build on these, or that should accept its customised representation on input, can optionally define `get_api_form_data(value, prefix, flatten_child)` to convert its API value into form data. It returns a dict of the keys that the block's `value_from_datadict` reads under `prefix`, and can call `flatten_child(child_block, child_value, child_prefix)` to write the values of any child blocks it contains. See `TypedTableBlock` for an example.
+
 ```{note}
 Because updating replaces the whole value, build clients that send the complete StreamField list for the field rather than relying on partial, block-level updates.
 ```
