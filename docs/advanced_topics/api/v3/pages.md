@@ -137,7 +137,7 @@ Beyond `title`, `slug`, and the `meta` envelope, you can submit any of the follo
 -   Rich text field values, using the input formats described in [](api_v3);
 -   `ForeignKey` relations;
 -   `ParentalManyToMany` fields;
--   InlinePanel / `ParentalKey` child relations whose child fields are also writable.
+-   InlinePanel / `ParentalKey` child relations whose child fields are also writable, including nested child relations (see [](api_v3_streamfield)).
 
 Each submitted field is validated against the page type's generated schema and its admin form, so the same validation, permission, revision, and audit behaviour as the editor applies.
 
