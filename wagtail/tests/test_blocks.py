@@ -6004,6 +6004,39 @@ class TestStreamBlockWithFixtures(PageFixturesMixin, TestCase):
         )
 
 
+class TestChooserBlockWithSelectWidget(PageFixturesMixin, TestCase):
+    fixtures = ["test.json"]
+
+    class SelectPageBlock(blocks.ChooserBlock):
+        target_model = Page
+        widget = forms.Select
+
+    def test_value_from_datadict_with_blank_value(self):
+        block = self.SelectPageBlock(required=False)
+
+        value = block.value_from_datadict({"page": ""}, {}, "page")
+
+        self.assertIsNone(value)
+        self.assertIsNone(block.clean(value))
+
+    def test_blank_value_fails_validation_when_required(self):
+        block = self.SelectPageBlock(required=True)
+
+        value = block.value_from_datadict({"page": ""}, {}, "page")
+
+        with self.assertRaises(ValidationError):
+            block.clean(value)
+
+    def test_value_from_datadict_with_selected_value(self):
+        block = self.SelectPageBlock(required=False)
+        christmas_page = Page.objects.get(slug="christmas")
+
+        value = block.value_from_datadict({"page": str(christmas_page.pk)}, {}, "page")
+
+        self.assertEqual(value, christmas_page)
+        self.assertEqual(block.clean(value), christmas_page)
+
+
 class TestPageChooserBlock(PageFixturesMixin, TestCase):
     fixtures = ["test.json"]
 

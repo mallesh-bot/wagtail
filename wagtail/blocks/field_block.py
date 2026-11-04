@@ -952,6 +952,9 @@ class ChooserBlock(FieldBlock):
         # ModelChoiceField sometimes returns an ID, and sometimes an instance; we want the instance
         if value is None or isinstance(value, self.model_class):
             return value
+        elif value == "":
+            # Widgets other than choosers (such as Select) submit an empty string when blank
+            return None
         else:
             try:
                 return self.model_class.objects.get(pk=value)
